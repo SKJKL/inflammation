@@ -54,6 +54,20 @@ def test_daily_min_integers(test,expected):
     #test_array = np.array([[0,2,1],[9,3,7],[1,8,3],[2,2,6]])
     npt.assert_array_equal(np.array(expected), daily_min(test))
 
+
+@pytest.mark.parametrize(
+    "test, expected",
+    [
+        ([[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]),
+        ([[1, 1, 1], [1, 1, 1], [1, 1, 1]], [[1, 1, 1], [1, 1, 1], [1, 1, 1]]),
+        ([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [[0.33, 0.66, 1], [0.66, 0.83, 1], [0.77, 0.88, 1]])
+    ])
+def test_patient_normalise(test, expected):
+    """Test normalisation works for arrays of one and positive integers."""
+    from inflammation.models import patient_normalise
+    npt.assert_almost_equal(np.array(expected), patient_normalise(np.array(test)), decimal=2)
+
+
 @patch('inflammation.models.get_data_dir', return_value='/data_dir')
 def test_load_csv(mock_get_data_dir):
     from inflammation.models import load_csv
