@@ -2,7 +2,9 @@
 
 import numpy as np
 import numpy.testing as npt
+import pytest
 from unittest.mock import patch
+
 
 def test_daily_mean_zeros():
     """Test that mean function works for an array of zeros."""
@@ -28,6 +30,29 @@ def test_daily_mean_integers():
 
     # Need to use Numpy testing functions to compare arrays
     npt.assert_array_equal(np.array([3, 4]), daily_mean(test_array))
+
+
+def test_daily_max_integers():
+    """Tests max function works in an array"""
+
+    from inflammation.models import daily_max
+
+    test_array = np.array([[0,2],[9,3],[1,8],[2,2]]) #yapf: disable
+    npt.assert_array_equal(np.array([9, 8]), daily_max(test_array))
+
+@pytest.mark.parametrize(
+    "test, expected",
+    [
+        ([[0,1,7], [6,5,8], [5,3,0]], [0,1,0]),
+        ([[7,1,8], [3,4,1], [1,9,3]], [1,1,1]),
+    ])
+def test_daily_min_integers(test,expected):
+    """Tests max function works in an array"""
+
+    from inflammation.models import daily_min
+
+    #test_array = np.array([[0,2,1],[9,3,7],[1,8,3],[2,2,6]])
+    npt.assert_array_equal(np.array(expected), daily_min(test))
 
 @patch('inflammation.models.get_data_dir', return_value='/data_dir')
 def test_load_csv(mock_get_data_dir):
